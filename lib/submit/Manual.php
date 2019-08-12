@@ -233,7 +233,7 @@ class Manual extends Submit
             http_response_code( 401 );
             die();
         }
-        if ( ! empty( $lat ) && ! empty( $lon ) && ! empty( $poiName ) && ! empty( $poiDescription ) ) {
+        if ( ! empty( $lat ) && ! empty( $lon ) && ! empty( $poiName ) ) {
             $poiId = randomNum();
             $cols       = [
                 'poi_id'              => $poiId,
@@ -248,7 +248,7 @@ class Manual extends Submit
             ];
             $manualdb->insert( "poi", $cols );
             if ( $noDiscordSubmitLogChannel === false ) {
-                $data = array("content" => '```Added poi with id "' . $poiId . '" and gave it the new name: "' . $poiName . '".\nDescription: "' . $poiDescription . '".```' . $submitMapUrl . '/?lat=' . $lat . '&lon=' . $lon . '&zoom=18 ', "username" => $loggedUser);
+                $data = array("content" => '```Added poi with id "' . $poiId . '" and gave it the name: "' . $poiName . '".```' . $submitMapUrl . '/?lat=' . $lat . '&lon=' . $lon . '&zoom=18 ', "username" => $loggedUser);
                 sendToWebhook($discordSubmitLogChannelUrl, ($data));
             }
         }
@@ -261,7 +261,7 @@ class Manual extends Submit
 				    http_response_code( 401 );
 				    die();
 			  }
-			  if ( ! empty( $poiId ) && ! empty( $poiName ) && ! empty( $poiDescription ) ) {
+			  if ( ! empty( $poiId ) && ! empty( $poiName ) ) {
 				    $cols       = [
 					      'name'                => $poiName,
 					      'description'         => $poiDescription,
@@ -275,7 +275,7 @@ class Manual extends Submit
 				    ];
 				    $manualdb->update( "poi", $cols, $where );
 				    if ( $noDiscordSubmitLogChannel === false ) {
-					      $data = array("content" => '```Updated poi with id "' . $poiId . '" and gave it the new name: "' . $poiName . '".\nDescription: "' . $poiDescription . '".```' . $submitMapUrl . '&zoom=18 ', "username" => $loggedUser);
+					      $data = array("content" => '```Updated poi with id "' . $poiId . '" and gave it the new name: "' . $poiName . '".```' . $submitMapUrl . '&zoom=18 ', "username" => $loggedUser);
 					      sendToWebhook($discordSubmitLogChannelUrl, ($data));
 				    }
 			  }

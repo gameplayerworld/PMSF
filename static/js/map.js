@@ -2496,8 +2496,10 @@ function poiLabel(item) {
         dot = 'dot candidate-not-eligible'
         str += '<center><div style="font-weight:900;margin-bottom:5px;">' + i8ln('Not a eligible candidate') + '</div></center>'
     }
-    str += '<center><div><b>' + item.name + '</b></div>' +
-        '<div>' + item.description + '</div>'
+    str += '<center><div><b>' + item.name + '</b></div>'
+    if (item.description) {
+        str += '<div>' + item.description + '</div>'
+    }
     if (item.notes) {
         str += '<div><b>' + i8ln('Notes') + ':</b> ' + item.notes + '</div>'
     }
@@ -3993,7 +3995,7 @@ function editPoiData(event) { // eslint-disable-line no-unused-vars
     var poiName = form.find('[name="poi-name"]').val()
     var poiDescription = form.find('[name="poi-description"]').val()
     var poiNotes = form.find('[name="poi-notes"]').val()
-    if (poiName && poiName !== '' && poiDescription && poiDescription !== '') {
+    if (poiName && poiName !== '') {
         if (confirm(i8ln('I confirm this is an eligible POI location'))) {
             return $.ajax({
                 url: 'submit',
@@ -4029,7 +4031,7 @@ function submitPoi(event) { // eslint-disable-line no-unused-vars
     var poiName = form.find('[name="poi-name"]').val()
     var poiDescription = form.find('[name="poi-description"]').val()
     var poiNotes = form.find('[name="poi-notes"]').val()
-    if (poiName && poiName !== '' && poiDescription && poiDescription !== '') {
+    if (poiName && poiName !== '') {
         if (confirm(i8ln('I confirm this is an eligible POI location'))) {
             return $.ajax({
                 url: 'submit',
@@ -4047,7 +4049,7 @@ function submitPoi(event) { // eslint-disable-line no-unused-vars
                 },
                 error: function error() {
                     // Display error toast
-                    toastr['error'](i8ln('Make sure all fields are filled.'), i8ln('Error Submitting poi'))
+                    toastr['error'](i8ln('Make sure name field is filled.'), i8ln('Error Submitting poi'))
                     toastr.options = toastrOptions
                 },
                 complete: function complete() {
