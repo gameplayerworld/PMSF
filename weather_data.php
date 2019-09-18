@@ -6,12 +6,10 @@ header('Content-Type: application/json');
 if (strtolower($map) === "monocle") {
     if (strtolower($fork) === "default") {
         $scanner = new \Scanner\Monocle();
-    } elseif (strtolower($fork) === "mad") {
-        $scanner = new \Scanner\Monocle_MAD();
     } else {
         $scanner = new \Scanner\Monocle_PMSF();
     }
-} else if (strtolower($map) === "rocketmap") {
+} elseif (strtolower($map) === "rocketmap") {
     if (strtolower($fork) === "mad") {
         $scanner = new \Scanner\RocketMap_MAD();
     }
