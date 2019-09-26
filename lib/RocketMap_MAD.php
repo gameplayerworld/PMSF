@@ -82,13 +82,7 @@ class RocketMap_MAD extends RocketMap
         if ($encId != 0) {
             $encSql = " OR (encounter_id = " . $encId . " AND p.latitude > '" . $swLat . "' AND p.longitude > '" . $swLng . "' AND p.latitude < '" . $neLat . "' AND p.longitude < '" . $neLng . "' AND disappear_time > '" . $params[':time'] . "')";
         }
-        global $noDittoDetection, $possibleDitto;
-        $dittoSql = '';
-        if (!$noDittoDetection) {
-            $pDitto = implode(",", $possibleDitto);
-            $dittoSql = " OR (pokemon_id in (" . $pDitto . ") AND weather_boosted_condition > 0 AND (individual_attack < 4 OR individual_defense < 4 OR individual_stamina < 4 OR cp_multiplier < .3))";
-        }
-        return $this->query_active($select, $conds, $params, $encSql, $dittoSql);
+        return $this->query_active($select, $conds, $params, $encSql);
     }
 
     public function get_active_by_id($ids, $minIv, $minLevel, $exMinIv, $bigKarp, $tinyRat, $swLat, $swLng, $neLat, $neLng)
@@ -162,17 +156,17 @@ class RocketMap_MAD extends RocketMap
         return $this->query_active($select, $conds, $params);
     }
 
-    public function query_active($select, $conds, $params, $encSql = '', $dittoSql = '')
+    public function query_active($select, $conds, $params, $encSql = '')
     {
         global $db;
 
         $query = "SELECT :select
         FROM pokemon p
-        LEFT JOIN trs_spawn ts ON ts.spawnpoint = p.spawnpoint_id
+        INNER JOIN trs_spawn ts ON ts.spawnpoint = p.spawnpoint_id
         WHERE :conditions";
 
         $query = str_replace(":select", $select, $query);
-        $query = str_replace(":conditions", '(' . join(" AND ", $conds) . ')' . $encSql . $dittoSql, $query);
+        $query = str_replace(":conditions", '(' . join(" AND ", $conds) . ')' . $encSql, $query);
         $pokemons = $db->query($query, $params)->fetchAll(\PDO::FETCH_ASSOC);
 
         $data = array();
@@ -201,20 +195,6 @@ class RocketMap_MAD extends RocketMap
             }
             $pokemon["pokemon_types"] = $types;
             $pokemon["cp_multiplier"] = isset($pokemon["cp_multiplier"]) ? floatval($pokemon["cp_multiplier"]) : null;
-            // Ditto detection
-            global $noDittoDetection, $possibleDitto;
-            if (!$noDittoDetection) {
-                if (in_array($pokemon["pokemon_id"], $possibleDitto) && $pokemon["weather_boosted_condition"] > 0 && $pokemon["cp_multiplier"] !== null) {
-                    if ($pokemon["cp_multiplier"] < 0.3 || $pokemon["individual_attack"] < 4 || $pokemon["individual_defense"] < 4 || $pokemon["individual_stamina"] < 4) {
-                        if ($pokemon["weather_boosted_condition"] != 3) {
-                            $pokemon["weather_boosted_condition"] = 0;
-                        }
-                        $pokemon["pokemon_id"] = 132;
-                        $pokemon["form"] = 0;
-                        $pokemon["pokemon_name"] = $pokemon["pokemon_name"] . ' (' . i8ln('Ditto') . ')';
-                    }
-                }
-            }
 
             $data[] = $pokemon;
 
