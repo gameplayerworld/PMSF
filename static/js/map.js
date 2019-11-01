@@ -185,7 +185,7 @@ var notifyNoIvTitle = '<pkm>'
  <dist>  - disappear time
  <udist> - time until disappear
  */
-var notifyText = 'disappears at <dist> (<udist>)'
+var notifyText = i8ln('disappears at') + ' <dist> (<udist>)'
 
 var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider
 var searchProvider = new OpenStreetMapProvider()
@@ -1068,6 +1068,7 @@ function gymLabel(item) {
     var url = item['url']
     var form = item['form']
     var freeSlots = item['slots_available']
+    var gender = item['raid_pokemon_gender']
 
     var raidSpawned = item['raid_level'] != null
     var raidStarted = item['raid_pokemon_id'] != null
@@ -1089,6 +1090,9 @@ function gymLabel(item) {
             raidStr += '<br>' + item.raid_pokemon_name
             if (form !== null && form > 0 && item['form_name'] !== 'Normal') {
                 raidStr += ' (' + i8ln(item['form_name']) + ')'
+            }
+            if (gender > 0) {
+                raidStr += ' ' + genderType[gender - 1]
             }
             raidStr += cpStr
         }
@@ -5488,6 +5492,11 @@ function updateS2Overlay() {
 function drawWeatherOverlay(weather) {
     if (weather) {
         $.each(weather, function (idx, item) {
+            if (map.getZoom() <= 13) {
+                $.each(weatherMarkers, function (index, marker) {
+                    markers.addLayer(marker)
+                })
+            }
             weatherArray.push(S2.idToCornerLatLngs(item.s2_cell_id))
             var poly = L.polygon(weatherArray, {
                 color: weatherColors[item.condition],
