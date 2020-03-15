@@ -1113,7 +1113,7 @@ function createHearts() {
 }
 
 function createCoronaSupplies() {
-    if (!coronaOverlay) {
+    if (!corona) {
         return false
     }
     var d = new Date()
@@ -1121,12 +1121,12 @@ function createCoronaSupplies() {
         const coronaOverlay = '<canvas id="corona-canvas"></canvas>'
         $('#map').append(coronaOverlay)
         var hearts = {
-            heartHeight: 25,
-            heartWidth: 25,
+            heartHeight: 40,
+            heartWidth: 40,
             hearts: [],
             heartImage: 'static/images/misc/corona/tp.png',
             heartImageAlt: 'static/images/misc/corona/handsoap.png',
-            maxHearts: 50,
+            maxHearts: 25,
             minScale: 0.4,
             draw: function () {
                 this.setCanvasSize()
