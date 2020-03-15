@@ -516,9 +516,10 @@ $weatherColors = [
 //-----------------------------------------------------
 // Holiday Overlay
 //-----------------------------------------------------
-$letItSnow = true;                                                   // Show snow overlay at 24, 25 and 26 December
-$makeItBang = true;                                                  // Show fireworks overlay at 31 December and 1 January
-$showYourLove = true;                                                // Show valentine overlay at 14 februari
+$letItSnow = false;                                                   // Show snow overlay at 24, 25 and 26 December
+$makeItBang = false;                                                  // Show fireworks overlay at 31 December and 1 January
+$showYourLove = false;                                                // Show valentine overlay at 14 februari
+$coronaOverlay = false;
 
 //-----------------------------------------------------
 // DEBUGGING

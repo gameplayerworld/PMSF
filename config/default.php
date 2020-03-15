@@ -96,10 +96,10 @@ $customTileServerAddress = "";                                      // TileServe
 $forcedTileServer = false;
 
 /* Custom Overlay */
-$letItSnow = true;                                                   // Show snow overlay at 24, 25 and 26 December
-$makeItBang = true;                                                  // Show fireworks overlay at 31 December and 1 January
-$showYourLove = true;
-
+$letItSnow = false;                                                   // Show snow overlay at 24, 25 and 26 December
+$makeItBang = false;                                                  // Show fireworks overlay at 31 December and 1 January
+$showYourLove = false;
+$coronaOverlay = false;
 /* Google Analytics */
 
 $gAnalyticsId = "";                                                 // "" for empty, "UA-XXXXX-Y" add your Google Analytics tracking ID

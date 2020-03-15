@@ -2299,6 +2299,7 @@ if (!$noLoadingScreen) {
     var letItSnow = <?php echo $letItSnow === true ? 'true' : 'false' ?>;
     var makeItBang = <?php echo $makeItBang === true ? 'true' : 'false' ?>;
     var showYourLove = <?php echo $showYourLove === true ? 'true' : 'false' ?>;
+    var corona = <?php echo $coronaOverlay === true ? 'true' : 'false' ?>;
     var defaultDustAmount = <?php echo $defaultDustAmount; ?>;
     var noDarkMode = <?php echo $noDarkMode === true ? 'true' : 'false' ?>;
 </script>
