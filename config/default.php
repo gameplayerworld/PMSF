@@ -17,7 +17,6 @@ $libs[] = "Scanner.php";
 $libs[] = "Monocle.php";
 $libs[] = "Monocle_PMSF.php";
 $libs[] = "RDM.php";
-$libs[] = "RDM_beta.php";
 $libs[] = "RocketMap.php";
 $libs[] = "RocketMap_MAD.php";
 $libs[] = "search/Search.php";
@@ -50,7 +49,7 @@ $startingLng = 5.302366;                                        // Starting long
 $maxLatLng = 1;                                                     // Max latitude and longitude size (1 = ~110km, 0 to disable)
 $defaultZoom = 16;                                                  // Default zoom level for first time users.
 $maxZoomOut = 0;                                                    // Max zoom out level (11 ~= $maxLatLng = 1, 0 to disable, lower = the further you can zoom out)
-$maxZoomIn = 18;                                                    // Max zoom in level 18
+$maxZoomIn = 18;                                                    // Max zoom in level 18, higher values will be loaded from level 18 and auto-scaled
 $disableClusteringAtZoom = 15;					                    // Disable clustering above this value. 0 to disable
 $zoomToBoundsOnClick = 15;					                        // Zoomlevel on clusterClick
 $maxClusterRadius = 30;						                        // The maximum radius that a cluster will cover from the central marker (in pixels).
@@ -97,9 +96,10 @@ $customTileServerAddress = "";                                      // TileServe
 $forcedTileServer = false;
 
 /* Custom Overlay */
-$letItSnow = true;                                                   // Show snow overlay at 24, 25 and 26 December
-$makeItBang = true;                                                  // Show fireworks overlay at 31 December and 1 January
-
+$letItSnow = false;                                                   // Show snow overlay at 24, 25 and 26 December
+$makeItBang = false;                                                  // Show fireworks overlay at 31 December and 1 January
+$showYourLove = false;
+$coronaOverlay = false;
 /* Google Analytics */
 
 $gAnalyticsId = "";                                                 // "" for empty, "UA-XXXXX-Y" add your Google Analytics tracking ID
@@ -141,7 +141,7 @@ $imgurCID = "";
 
 /* Counts */
 $numberOfPokemon = 649;
-$numberOfItem = 1405;
+$numberOfItem = 1600;
 $numberOfGrunt = 50;
 $numberOfEgg = 10;
 //-----------------------------------------------------
@@ -483,7 +483,7 @@ $areas = [];                                                        // [[latitud
 //-----------------------------------------------------
 // Weather Config
 //-----------------------------------------------------
-
+$noHeaderWeatherIcon = true;
 $noWeatherOverlay = true;                                          // true/false
 $enableWeatherOverlay = 'false';                                    // true/false
 
