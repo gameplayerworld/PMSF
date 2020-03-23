@@ -811,9 +811,7 @@ if (!$noLoadingScreen) {
                             <select name="min-level-raids-filter-switch" id="min-level-raids-filter-switch">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
+                                <option value="3">3</option>                         
                             </select>
                         </div>
                         <div class="form-control switch-container" id="max-level-raids-filter-wrapper" style="float:none;height:50px;margin-bottom:5px;">
@@ -822,8 +820,6 @@ if (!$noLoadingScreen) {
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
                             </select>
                         </div>
                         <?php
