@@ -672,12 +672,6 @@ var stylesatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/se
     maxNativeZoom: 18
 })
 
-var stylewikipedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', { // eslint-disable-line no-unused-vars
-    attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
-    maxZoom: maxZoom,
-    maxNativeZoom: 18
-})
-
 var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=' + mBoxKey, { // eslint-disable-line no-unused-vars
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: maxZoom,
@@ -718,7 +712,9 @@ var currentHour = currentDate.getHours()
 var mapboxPogoDynamic = currentHour >= 6 && currentHour < 19 ? mapboxPogo : mapboxPogoDark // eslint-disable-line no-unused-vars
 
 function setTileLayer(layername) {
-    if (map.hasLayer(window[_oldlayer])) { map.removeLayer(window[_oldlayer]) }
+    if (map.hasLayer(window[_oldlayer]) && window[_oldlayer] !== window[layername]) {
+        map.removeLayer(window[_oldlayer])
+    }
     map.addLayer(window[layername])
     _oldlayer = layername
 }
@@ -1401,6 +1397,16 @@ function pokemonLabel(item) {
         if (pMove2 !== 'unknown') {
             pMoveType2 = '<img style="position:relative;top:3px;left:2px;height:15px;" src="static/types/' + moves[item['move_2']]['type'] + '.png">'
         }
+
+        var catchRates = ''
+        if (!noCatchRates && item['catch_rate_1'] != null && item['catch_rate_2'] != null && item['catch_rate_3'] != null) {
+            catchRates = '<div>' +
+            '<img src="static/images/pokeball-1.png" style="height:14px;position:relative;top:2px;"> ' + (item['catch_rate_1'] * 100).toFixed(1) + '% ' +
+            '<img src="static/images/greatball.png" style="height:14px;position:relative;top:2px;"> ' + (item['catch_rate_2'] * 100).toFixed(1) + '% ' +
+            '<img src="static/images/ultraball.png" style="height:14px;position:relative;top:2px;"> ' + (item['catch_rate_3'] * 100).toFixed(1) + '%' +
+            '</div>'
+        }
+
         details +=
             '<div style="position:absolute;top:90px;left:80px;"><div>' +
             i8ln('IV') + ': <b>' + iv.toFixed(1) + '%</b> (<b>' + atk + '</b>/<b>' + def + '</b>/<b>' + sta + '</b>)' +
@@ -1411,6 +1417,7 @@ function pokemonLabel(item) {
             '<div>' + i8ln('Quick') + ': <b>' + pMove1 + '</b>' + pMoveType1 + '</div>' +
             '<div>' + i8ln('Charge') + ': <b>' + pMove2 + '</b>' + pMoveType2 + '</div>' +
             '<div>' + i8ln('Weight') + ': <b>' + weight + '</b>' + ' | ' + i8ln('Height') + ': <b>' + height + '</b></div>' +
+            catchRates +
             '</div>'
     }
 
@@ -1467,8 +1474,10 @@ function pokemonLabel(item) {
     }
 
     contentstring += '<small>' + typesDisplay + '</small>' + '<br>' + details
-    if (atk != null && def != null && sta != null) {
+    if (atk != null && def != null && sta != null && noCatchRates) {
         contentstring += '<center><div style="position:relative;top:55px;">'
+    } else if (atk != null && def != null && sta != null && !noCatchRates) {
+        contentstring += '<center><div style="position:relative;top:70px;">'
     } else {
         contentstring += '<center><div style="position:relative;">'
     }
@@ -1477,8 +1486,10 @@ function pokemonLabel(item) {
     ' | <a href="javascript:removePokemonMarker(\'' + encounterId + '\')" title="' + i8ln('Remove this Pokémon from the map') + '"><i class="fas fa-trash-alt" style="font-size:15px;width:20px;"></i></a>' +
     ' | <a href="javascript:void(0);" onclick="javascript:toggleOtherPokemon(' + id + ');" title="' + i8ln('Toggle display of other Pokémon') + '"><i class="fas fa-search-plus" style="font-size:15px;width:20px;"></i></a>' +
     '</div></center>'
-    if (atk != null && def != null && sta != null) {
+    if (atk != null && def != null && sta != null && noCatchRates) {
         contentstring += '<div style="position:relative;top:55px;"><center>'
+    } else if (atk != null && def != null && sta != null && !noCatchRates) {
+        contentstring += '<div style="position:relative;top:70px;"><center>'
     } else {
         contentstring += '<div style="position:relative;"><center>'
     }
@@ -1490,6 +1501,9 @@ function pokemonLabel(item) {
     '</a></center></div>'
     if (atk != null && def != null && sta != null) {
         contentstring += '<br><br><br>'
+        if (!noCatchRates) {
+            contentstring += '<br>'
+        }
     }
     return contentstring
 }
@@ -1580,7 +1594,7 @@ function gymLabel(item) {
             } else {
                 hatchedEgg = 'hatched_legendary'
             }
-            raidIcon = '<img src="static/raids/egg_' + hatchedEgg + '.png" style="width:60px;height:70">'
+            raidIcon = '<img src="static/raids/egg_' + hatchedEgg + '.png" style="height:70px;">'
         } else {
             var raidEgg = ''
             if (item['raid_level'] <= 2) {
@@ -1590,7 +1604,7 @@ function gymLabel(item) {
             } else {
                 raidEgg = 'legendary'
             }
-            raidIcon = '<img src="static/raids/egg_' + raidEgg + '.png">'
+            raidIcon = '<img src="static/raids/egg_' + raidEgg + '.png" style="height:70px;">'
         }
     }
     if (manualRaids && item['scanArea'] === false) {
@@ -2048,7 +2062,12 @@ function pokestopLabel(item) {
             '<i class="fab fa-whatsapp" style="position:relative;top:3px;left:5px;color:#26c300;font-size:20px;"></i></a>'
     }
     str += '</center></div>'
-
+    if (!noQuests && item['quest_type'] !== null && lastMidnight < Number(item['quest_timestamp'])) {
+        str += '<center><div>' +
+            i8ln('Quest found') + ': ' + getDateStr(item['quest_timestamp'] * 1000) + ' ' + getTimeStr(item['quest_timestamp'] * 1000) +
+            '</div></center>'
+    }
+    str += '<center><div>' + i8ln('Last seen') + ': ' + getDateStr(item['last_seen']) + ' ' + getTimeStr(item['last_seen']) + '</div></center>'
     return str
 }
 
@@ -2367,7 +2386,7 @@ function getGymMarkerIcon(item) {
         html = '<div style="position:relative;">' +
             '<img src="static/forts/' + Store.get('gymMarkerStyle') + '/' + teamStr + '.png" style="width:50px;height:auto;"/>' +
             exIcon +
-            '<img src="static/raids/egg_' + raidEgg + '.png" style="width:25px;height:auto;position:absolute;top:6px;right:18px;"/>' +
+            '<img src="static/raids/egg_' + raidEgg + '.png" style="width:30px;position:absolute;top:4px;right:15px;"/>' +
             '</div>'
         if (noRaidTimer === false && Store.get(['showRaidTimer'])) {
             html += '<div><span class="raid-countdown gym-icon-countdown" disappears-at="' + item['raid_start'] + '" end>' + generateRemainingTimer(item['raid_start'], 'end') + '</span></div>'
